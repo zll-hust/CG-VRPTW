@@ -17,6 +17,7 @@ public class Parameters {
 		public static double zero_reduced_cost_AbortColGen = -0.005;
 		public static double subproblemTiLim = 5000;
 		public static double subproblemObjVal = -1000;
+		public static int M = 10000;
 	}
 //	public static void configureCplex(ColumnGen.MasterProblem masterproblem) {
 //		try {
