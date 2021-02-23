@@ -18,16 +18,16 @@ public class ColumnGen {
     public Instance instance;
     public List<Path> paths;
     public MasterProblem masterproblem;
-    public SubProblem subproblem;
+    public SubProblem_Pulse subproblem;
     public Graph g;
 
     public ColumnGen(String instance) {
         this.instance = new Instance(instance);
         this.g = this.instance.ReadDataFromFile();
-        this.masterproblem = new MasterProblem(g, paths);
-        this.subproblem = new SubProblem();
-        this.watch = new Timer();
         this.paths = new ArrayList<Path>();
+        this.masterproblem = new MasterProblem(g, paths);
+        this.subproblem = new SubProblem_Pulse();
+        this.watch = new Timer();
     }
 
     public void runColumnGeneration() {
@@ -60,7 +60,7 @@ public class ColumnGen {
         System.out.format("%9.0f", (double) iter);
         System.out.format("%9.1f", watch.getSecond());
         System.out.format("%9.0f", (double) paths.size());
-        System.out.format("%12.4f", masterproblem.lastObjValue);//master lower bound
+        System.out.format("%15.2f", masterproblem.lastObjValue);//master lower bound
 //        System.out.format("%12.4f", subproblem.lastObjValueRelaxed);//sb lower bound
 //        System.out.format("%12.4f", subproblem.lastObjValue);//sb lower bound
         System.out.println();

@@ -21,7 +21,7 @@ public class MasterProblem {
     public IloCplex cplex;
     private IloObjective total_cost;
     private Map<Customer, IloRange> row_customers; // 存储约束方程
-    private Map<Customer, Double> pi; // 存储对偶变量
+    private Map<Customer, Double> lambda; // 存储对偶变量
     private List<IloConversion> mipConversion;
     public double lastObjValue;
     public Graph g;
@@ -40,7 +40,7 @@ public class MasterProblem {
             cplex = new IloCplex();
             total_cost = cplex.addMinimize();  // objective (10)
             row_customers = new HashMap<Customer, IloRange>();
-            pi = new HashMap<Customer, Double>();
+            lambda = new HashMap<Customer, Double>();
             mipConversion = new ArrayList<IloConversion>();
 
             for (Customer customer : g.all_customers.values())
@@ -56,7 +56,7 @@ public class MasterProblem {
             new_path.add(g.depot_start.id);
             new_path.add(c.id);
             new_path.add(g.depot_end.id);
-            addNewColumn(new Path(new_path, paths));
+            addNewColumn(new Path(new_path, paths, g));
         }
     }
 
@@ -74,7 +74,7 @@ public class MasterProblem {
     public void saveDualValues() {
         try {
             for (Customer c : g.all_customers.values())
-                pi.put(c, cplex.getDual(row_customers.get(c)));
+                lambda.put(c, cplex.getDual(row_customers.get(c)));
         } catch (IloException e) {
             System.err.println("Concert exception caught: " + e);
         }
@@ -89,7 +89,7 @@ public class MasterProblem {
 
                 System.out.print("[ ");
                 for (Customer c : g.all_customers.values())
-                    System.out.print(String.format("%3.2f", pi.get(c)) + " ");
+                    System.out.print(String.format("%3.2f", lambda.get(c)) + " ");
                 System.out.print(" ]\n");
             }
         } catch (IloException e) {

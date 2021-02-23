@@ -18,15 +18,16 @@ public class Path {
     public Graph g;
     public List<Path> paths;
 
-    public Path(List<Integer> stops_new_path, List<Path> paths) {
+    public Path(List<Integer> stops_new_path, List<Path> paths, Graph g) {
         this.paths = paths;
+        this.g = g;
         customers = new ArrayList<Customer>();
         for (int i = 1; i < stops_new_path.size() - 1; i++) {
             customers.add(g.all_customers.get(stops_new_path.get(i)));
         }
         calculateCost();
-        id = paths.size();
-        paths.add(this);
+        id = this.paths.size();
+        this.paths.add(this);
     }
 
     private void calculateCost() {
