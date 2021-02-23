@@ -12,6 +12,8 @@ import java.util.Scanner;
 public class Instance {
     public String instanceName;
     public Graph graph;
+    public double max_capacity = 200;
+
 
     public Instance(String instanceName) {
         this.instanceName = instanceName;
