@@ -32,15 +32,4 @@ public class Parameters {
 //		}
 //		catch (IloException e) {System.err.println("Concert exception caught: " + e);}
 //	}
-//	public static void configureCplex(ColumnGen.SubProblem subproblem) {
-//		try {
-//			// branch and bound
-//			subproblem.cplex.setParam(IloCplex.Param.MIP.Strategy.NodeSelect, 1);
-//			subproblem.cplex.setParam(IloCplex.Param.MIP.Strategy.Branch,1);
-//			subproblem.cplex.setParam(IloCplex.Param.MIP.Tolerances.MIPGap, 0.1);
-//			// display options
-//			subproblem.cplex.setParam(IloCplex.Param.MIP.Display, 0);
-//		}
-//		catch (IloException e) {System.err.println("Concert exception caught: " + e);}
-//	}
 }

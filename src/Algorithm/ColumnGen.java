@@ -4,6 +4,7 @@ import Timer.Timer;
 import VRPTW.Graph;
 import VRPTW.Instance;
 import VRPTW.Path;
+import Parameters.Parameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +27,22 @@ public class ColumnGen {
         this.g = this.instance.ReadDataFromFile();
         this.paths = new ArrayList<Path>();
         this.masterproblem = new MasterProblem(g, paths);
-        this.subproblem = new SubProblem_Pulse();
         this.watch = new Timer();
     }
 
     public void runColumnGeneration() {
         int iteration_counter = 0;
         watch.start();
-//        do {
+        do {
             iteration_counter++;
             masterproblem.solveRelaxation();
-//            subproblem.updateReducedCost();
-//            subproblem.solve();
+            subproblem = new SubProblem_Pulse(masterproblem.lambda, g, g.depot_start.startTw, g.depot_start.endTw);
+            List<Integer> path = subproblem.runPulseAlgorithm();
+            masterproblem.addNewColumn(new Path(path, paths, g));
             displayIteration(iteration_counter);
-//        } while (subproblem.lastObjValue < Parameters.ColGen.zero_reduced_cost_AbortColGen && iteration_counter != 2);
-//
-//        masterproblem.solveMIP();
+        } while (subproblem.objValue < Parameters.ColGen.zero_reduced_cost_AbortColGen && iteration_counter != 2);
+
+        masterproblem.solveMIP();
         watch.stop();
         System.out.println(watch);
     }
@@ -61,8 +62,7 @@ public class ColumnGen {
         System.out.format("%9.1f", watch.getSecond());
         System.out.format("%9.0f", (double) paths.size());
         System.out.format("%15.2f", masterproblem.lastObjValue);//master lower bound
-//        System.out.format("%12.4f", subproblem.lastObjValueRelaxed);//sb lower bound
-//        System.out.format("%12.4f", subproblem.lastObjValue);//sb lower bound
+        System.out.format("%12.4f", subproblem.objValue);
         System.out.println();
     }
 }

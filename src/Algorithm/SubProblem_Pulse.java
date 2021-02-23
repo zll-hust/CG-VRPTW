@@ -3,7 +3,6 @@ package Algorithm;
 import VRPTW.Customer;
 import VRPTW.Graph;
 import VRPTW.Instance;
-import VRPTW.Path;
 
 import java.util.*;
 
@@ -23,6 +22,7 @@ public class SubProblem_Pulse {
     public double[] best_cost_cus; // 每个点到终点的最小目标值
     public double[][] lower_bound_matrix;
     public double time_incumbent;
+    public double objValue;
 
     public SubProblem_Pulse(Map<Customer, Double> lambda, Graph g, double lower_time, double upper_time) {
         for (Customer c : lambda.keySet()) {
@@ -100,6 +100,7 @@ public class SubProblem_Pulse {
         alt_path.addAll(path);
         alt_path.remove(alt_path.size() - 1);
         alt_path.add(cur);
+        // 算例若满足三角不等式，时间也应该一定更小。
         if (cost >= reduced_cost(alt_path)) //prune condition
             return false;
         return true;
@@ -123,8 +124,8 @@ public class SubProblem_Pulse {
      *  capacity: 目前的总容量；time: 目前的总时间；path: 目前的路径；flag:
      */
     public void pulse_procedure(int root, int cur, double cost, double capacity, double time, List<Integer> path) {
-        if (time < g.all_customers.get(cur).getStartTw()) // 更新时间
-            time = g.all_customers.get(cur).getStartTw();
+//        if (time < g.all_customers.get(cur).getStartTw()) // 更新时间
+//            time = g.all_customers.get(cur).getStartTw();
         if (!is_feasible(cur, capacity, time) || !check_bounds(root, cur, time, cost) || !rollback(cur, cost, path))
             return;
         List<Integer> opt_path = new ArrayList<>();
@@ -156,9 +157,11 @@ public class SubProblem_Pulse {
         }
     }
 
-    public void runPulseAlgorithm() {
+    public List<Integer> runPulseAlgorithm() {
         bounding_scheme();
         List<Integer> opt_path = new ArrayList<>();
         pulse_procedure(g.depot_start.id, g.depot_start.id, 0.0, 0.0, 0.0, opt_path);
+        objValue = reduced_cost(opt_path);
+        return opt_path;
     }
 }

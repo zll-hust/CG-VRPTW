@@ -6,8 +6,8 @@ package VRPTW;
  * @description： TODO
  */
 public class Depot extends Node {
-    private double startTw;
-    private double endTw;
+    public double startTw;
+    public double endTw;
 
     public Depot(Graph graph, int external_id, double x, double y, double startTw, double endTw) {
         super(graph, external_id, x, y, 0);

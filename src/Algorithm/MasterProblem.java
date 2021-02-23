@@ -19,10 +19,10 @@ import java.util.Map;
  */
 public class MasterProblem {
     public IloCplex cplex;
-    private IloObjective total_cost;
-    private Map<Customer, IloRange> row_customers; // 存储约束方程
-    private Map<Customer, Double> lambda; // 存储对偶变量
-    private List<IloConversion> mipConversion;
+    public IloObjective total_cost;
+    public Map<Customer, IloRange> row_customers; // 存储约束方程
+    public Map<Customer, Double> lambda; // 存储对偶变量
+    public List<IloConversion> mipConversion;
     public double lastObjValue;
     public Graph g;
     public List<Path> paths;
@@ -92,6 +92,47 @@ public class MasterProblem {
                     System.out.print(String.format("%3.2f", lambda.get(c)) + " ");
                 System.out.print(" ]\n");
             }
+        } catch (IloException e) {
+            System.err.println("Concert exception caught: " + e);
+        }
+    }
+
+    public void convertToMIP() {
+        try {
+            for (Path path : paths) {
+                mipConversion.add(cplex.conversion(path.theta, IloNumVarType.Bool));
+                cplex.add(mipConversion.get(mipConversion.size() - 1));
+            }
+        } catch (IloException e) {
+            System.err.println("Concert exception caught: " + e);
+        }
+    }
+
+    public void solveMIP() {
+        try {
+            convertToMIP();
+            if (cplex.solve()) {
+                displaySolution();
+                //logger.writeLog(instance, cplex.getObjValue(), cplex.getBestObjValue());
+            } else {
+                System.out.println("Integer solution not found");
+            }
+        } catch (IloException e) {
+            System.err.println("Concert exception caught: " + e);
+        }
+    }
+
+    public void displaySolution() {
+        try {
+            double totalCost = 0;
+            System.out.println("\n" + "--- Solution >>> ------------------------------");
+            for (Path path : paths) {
+                if (cplex.getValue(path.theta) > 0.99999) {
+                    totalCost += path.displayInfo();
+                }
+            }
+            System.out.println("Total cost = " + totalCost);
+            System.out.println("\n" + "--- Solution <<< ------------------------------");
         } catch (IloException e) {
             System.err.println("Concert exception caught: " + e);
         }
