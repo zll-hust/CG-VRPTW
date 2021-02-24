@@ -1,4 +1,4 @@
-# CG-VRPTW-ZLL
+# CG-VRPTW
 
 列生成+pulse algorithm求解VRPTW
 
