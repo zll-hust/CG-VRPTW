@@ -32,7 +32,7 @@ public class MasterProblem {
         this.paths = paths;
         createModel();
         createDefaultPaths();
-//        Parameters.configureCplex(this);
+        Parameters.configureCplex(this);
     }
 
     public void createModel() {
@@ -43,8 +43,8 @@ public class MasterProblem {
             lambda = new HashMap<Customer, Double>();
             mipConversion = new ArrayList<IloConversion>();
 
-            for (Customer customer : g.all_customers.values())
-                row_customers.put(customer, cplex.addRange(1, Parameters.ColGen.M, "cust " + customer.id));  // constraints (11)
+            for (Customer customer : g.all_customers.values()) //todo  1  Parameters.ColGen.M
+                row_customers.put(customer, cplex.addRange(1, 1, "cust " + customer.id));  // constraints (11)
         } catch (IloException e) {
             System.err.println("Concert exception caught: " + e);
         }
@@ -65,7 +65,7 @@ public class MasterProblem {
             IloColumn new_column = cplex.column(total_cost, path.cost);
             for (Customer c : g.all_customers.values())
                 new_column = new_column.and(cplex.column(row_customers.get(c), path.ifContainsCus(c)));
-            path.theta = cplex.numVar(new_column, 0, Parameters.ColGen.M, "theta." + path.id); // 1
+            path.theta = cplex.numVar(new_column, 0, 1, "y." + path.id); //todo theta 1  Parameters.ColGen.M
         } catch (IloException e) {
             System.err.println("Concert exception caught: " + e);
         }
@@ -82,15 +82,15 @@ public class MasterProblem {
 
     public void solveRelaxation() {
         try {
-            System.out.println(cplex.getModel());
+//            System.out.println(cplex.getModel());
             if (cplex.solve()) {
                 saveDualValues();
                 lastObjValue = cplex.getObjValue();
 
-                System.out.print("[ ");
-                for (Customer c : g.all_customers.values())
-                    System.out.print(String.format("%3.2f", lambda.get(c)) + " ");
-                System.out.print(" ]\n");
+//                System.out.print("[ ");
+//                for (Customer c : g.all_customers.values())
+//                    System.out.print(String.format("%3.2f", lambda.get(c)) + " ");
+//                System.out.print(" ]\n");
             }
         } catch (IloException e) {
             System.err.println("Concert exception caught: " + e);

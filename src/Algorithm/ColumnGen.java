@@ -35,14 +35,18 @@ public class ColumnGen {
         watch.start();
         do {
             iteration_counter++;
+//            if(iteration_counter == 3)
+//                break;
             masterproblem.solveRelaxation();
-            subproblem = new SubProblem_Pulse(masterproblem.lambda, g, g.depot_start.startTw, g.depot_start.endTw);
+            subproblem = new SubProblem_Pulse(masterproblem.lambda, g, instance, g.depot_start.startTw, g.depot_start.endTw, (g.depot_start.endTw - g.depot_start.startTw) / 4);
             List<Integer> path = subproblem.runPulseAlgorithm();
             masterproblem.addNewColumn(new Path(path, paths, g));
             displayIteration(iteration_counter);
-        } while (subproblem.objValue < Parameters.ColGen.zero_reduced_cost_AbortColGen && iteration_counter != 2);
+        } while (subproblem.objValue < Parameters.ColGen.zero_reduced_cost_AbortColGen);
 
-        masterproblem.solveMIP();
+//        masterproblem.solveMIP();
+        masterproblem.solveRelaxation();
+        masterproblem.displaySolution();
         watch.stop();
         System.out.println(watch);
     }
@@ -54,7 +58,6 @@ public class ColumnGen {
             System.out.print("     SbTime");
             System.out.print("   nPaths");
             System.out.print("       MP lb");
-            System.out.print("       SB lb");
             System.out.print("      SB int");
             System.out.println();
         }

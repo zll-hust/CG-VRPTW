@@ -30,11 +30,23 @@ public class Path {
         this.paths.add(this);
     }
 
+//    private void calculateCost() {
+//        if (customers.size() > 0) {
+//            cost = g.depot_start.time_to_node(customers.get(0)) + customers.get(0).time_at_node();
+//            for (int i = 1; i < customers.size(); i++) {
+//                cost += customers.get(i - 1).time_to_node(customers.get(i)) + customers.get(i).time_at_node();
+//            }
+//            cost += customers.get(customers.size() - 1).time_to_node(g.depot_end);
+//        } else {
+//            cost = 0;
+//        }
+//    }
+
     private void calculateCost() {
         if (customers.size() > 0) {
-            cost = g.depot_start.time_to_node(customers.get(0)) + customers.get(0).time_at_node();
+            cost = g.depot_start.time_to_node(customers.get(0));
             for (int i = 1; i < customers.size(); i++) {
-                cost += customers.get(i - 1).time_to_node(customers.get(i)) + customers.get(i).time_at_node();
+                cost += customers.get(i - 1).time_to_node(customers.get(i));
             }
             cost += customers.get(customers.size() - 1).time_to_node(g.depot_end);
         } else {
