@@ -1,6 +1,5 @@
 package Algorithm;
 
-import Timer.Timer;
 import VRPTW.Graph;
 import VRPTW.Instance;
 import VRPTW.Path;
@@ -15,7 +14,6 @@ import java.util.List;
  * @description： TODO
  */
 public class ColumnGen {
-    public Timer watch;
     public Instance instance;
     public List<Path> paths;
     public MasterProblem masterproblem;
@@ -27,16 +25,13 @@ public class ColumnGen {
         this.g = this.instance.ReadDataFromFile();
         this.paths = new ArrayList<Path>();
         this.masterproblem = new MasterProblem(g, paths);
-        this.watch = new Timer();
     }
 
     public void runColumnGeneration() {
         int iteration_counter = 0;
-        watch.start();
+        double start = System.currentTimeMillis();
         do {
             iteration_counter++;
-//            if(iteration_counter == 3)
-//                break;
             masterproblem.solveRelaxation();
             subproblem = new SubProblem_Pulse(masterproblem.lambda, g, instance, g.depot_start.startTw, g.depot_start.endTw, (g.depot_start.endTw - g.depot_start.startTw) / 4);
             List<Integer> path = subproblem.runPulseAlgorithm();
@@ -47,22 +42,20 @@ public class ColumnGen {
 //        masterproblem.solveMIP();
         masterproblem.solveRelaxation();
         masterproblem.displaySolution();
-        watch.stop();
-        System.out.println(watch);
+        double end = System.currentTimeMillis();
+        System.out.println("Time used: " + (end - start) / 1000 + "s");
     }
 
     private void displayIteration(int iter) {
         if ((iter) % 20 == 0 || iter == 1) {
             System.out.println();
             System.out.print("Iteration");
-            System.out.print("     SbTime");
             System.out.print("   nPaths");
             System.out.print("       MP lb");
             System.out.print("      SB int");
             System.out.println();
         }
         System.out.format("%9.0f", (double) iter);
-        System.out.format("%9.1f", watch.getSecond());
         System.out.format("%9.0f", (double) paths.size());
         System.out.format("%15.2f", masterproblem.lastObjValue);//master lower bound
         System.out.format("%12.4f", subproblem.objValue);

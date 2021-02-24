@@ -99,19 +99,6 @@ public class SubProblem_Pulse {
         return true;
     }
 
-//    public void dynamic_update(int cur, List<Integer> opt_path, double time) {
-//        List<Integer> part_path = new ArrayList<>();
-//        boolean flag = false;
-//        for (int i = 0; i < opt_path.size(); i++) {
-//            if (opt_path.get(i) == cur)
-//                flag = true;
-//            if (flag)
-//                part_path.add(opt_path.get(i));
-//        }
-//        double path_cost = reduced_cost(part_path);
-//        lower_bound_matrix[cur][(int) ((upper_time - time) / step)] = Math.min(path_cost, lower_bound_matrix[cur][(int) ((upper_time - time) / step)]);
-//    }
-
     /*
      *  root: 要到达的根节点；cur: 当前所在的节点；cost: 目前的总花费（reduce cost）
      *  capacity: 目前的总容量；time: 目前的总时间；path: 目前的路径；flag:
@@ -143,7 +130,6 @@ public class SubProblem_Pulse {
                 }
                 if (!new_path.isEmpty() && new_path.get(new_path.size() - 1) == g.depot_end.id && ((opt_path.isEmpty()) || reduced_cost(new_path) < reduced_cost(opt_path))) {
                     opt_path = new_path;
-//                    dynamic_update(cur, opt_path, time);
                 }
             }
         }
@@ -167,51 +153,6 @@ public class SubProblem_Pulse {
         objValue = reduced_cost(opt_path);
 //        System.out.println(opt_path);
 
-//        test(opt_path);
-
         return opt_path;
-    }
-
-    public void test(List<Integer> path){
-        List<Integer> p = new ArrayList<>();
-//        p.add(25);
-//        p.add(12);
-//        p.add(16);
-//        p.add(17);
-//        p.add(18);
-//        p.add(15);
-//        p.add(13);
-//        p.add(11);
-//        p.add(3);
-//        p.add(0);
-//        p.add(26);
-
-//        p.add(9);
-//        p.add(15);
-//        p.add(13);
-        p.add(11);
-        p.add(3);
-        p.add(1);
-        p.add(0);
-        p.add(26);
-        double a = reduced_cost(p);
-        System.out.println();
-
-        double time = 0.0, cap = 0.0;
-        for (int i = 0; i < path.size(); i++) {
-            cap += g.all_nodes.get(path.get(i)).getDemand();
-            if(time > g.all_nodes.get(path.get(i)).endTw){
-                System.out.println("err");
-            }
-            time = Math.min(time, g.all_nodes.get(path.get(i)).startTw);
-
-            if(i < path.size() - 1){
-                time += g.all_nodes.get(path.get(i)).time_at_node() +
-                        g.all_nodes.get(path.get(i)).time_to_node(g.all_nodes.get(path.get(i + 1)));
-            }else{
-                time += g.all_nodes.get(path.get(i)).time_at_node();
-            }
-        }
-        System.out.println(cap);
     }
 }
