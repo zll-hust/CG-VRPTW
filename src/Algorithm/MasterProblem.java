@@ -65,7 +65,7 @@ public class MasterProblem {
             IloColumn new_column = cplex.column(total_cost, path.cost);
             for (Customer c : g.all_customers.values())
                 new_column = new_column.and(cplex.column(row_customers.get(c), path.ifContainsCus(c)));
-            path.theta = cplex.numVar(new_column, 0, 1, "y." + path.id); //todo theta 1  Parameters.ColGen.M
+            path.theta = cplex.numVar(new_column, 0, 1, "theta." + path.id); //todo theta 1  Parameters.ColGen.M
         } catch (IloException e) {
             System.err.println("Concert exception caught: " + e);
         }

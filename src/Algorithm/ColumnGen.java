@@ -33,7 +33,7 @@ public class ColumnGen {
         do {
             iteration_counter++;
             masterproblem.solveRelaxation();
-            subproblem = new SubProblem_Pulse(masterproblem.lambda, g, instance, g.depot_start.startTw, g.depot_start.endTw, (g.depot_start.endTw - g.depot_start.startTw) / 4);
+            subproblem = new SubProblem_Pulse(masterproblem.lambda, g, instance, g.depot_start.startTw, g.depot_start.endTw, (g.depot_start.endTw - g.depot_start.startTw) / Parameters.ColGen.boundStep);
             List<Integer> path = subproblem.runPulseAlgorithm();
             masterproblem.addNewColumn(new Path(path, paths, g));
             displayIteration(iteration_counter);

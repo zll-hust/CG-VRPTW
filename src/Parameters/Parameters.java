@@ -20,6 +20,7 @@ public class Parameters {
 		public static double subproblemTiLim = 5000;
 		public static double subproblemObjVal = -1000;
 		public static int M = 10000;
+		public static int boundStep = 4;
 	}
 	public static void configureCplex(MasterProblem masterproblem) {
 		try {

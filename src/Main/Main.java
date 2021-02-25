@@ -13,7 +13,7 @@ import ilog.cplex.*;
 
 public class Main {
     public static void main(String[] args) {
-        ColumnGen col_gen = new ColumnGen("input\\Solomon\\100_customer\\c101.txt"); //"input\\Solomon\\25_customer\\c101.txt"
+        ColumnGen col_gen = new ColumnGen("input\\Solomon\\50_customer\\c101.txt"); //"input\\Solomon\\25_customer\\c101.txt"
         col_gen.runColumnGeneration();
     }
 }
